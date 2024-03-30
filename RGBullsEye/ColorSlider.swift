@@ -33,19 +33,49 @@
 import SwiftUI
 
 struct ColorSlider: UIViewRepresentable {
+	class Coordinator: NSObject {
+		var colorSlider: ColorSlider
+		
+		init(colorSlider: ColorSlider) {
+			self.colorSlider = colorSlider
+		}
+		
+		@objc func updateColorSlider(_ sender: UISlider) {
+			colorSlider.value = Double(sender.value)
+		}
+	}
+	
+	func makeCoordinator() -> ColorSlider.Coordinator {
+		Coordinator(colorSlider: self)
+	}
+	
+	
+	var color: UIColor
+	@Binding var value: Double
+	
   func makeUIView(context: Context) -> UISlider {
-    UISlider(frame: .zero)
+    let slider = UISlider(frame: .zero)
+		// paintpalette.fill
+		slider.setThumbImage(UIImage(systemName: "paintpalette.fill"), for: .normal)
+		slider.tintColor = color
+		slider.value = Float(value)
+		slider.addTarget(context.coordinator,
+										 action: #selector(Coordinator.updateColorSlider(_:)),
+										 for: .valueChanged)
+		return slider
   }
 
-  func updateUIView(_ uiView: UISlider, context: Context) { }
+  func updateUIView(_ uiView: UISlider, context: Context) { 
+		uiView.value = Float(self.value)
+	}
 }
 
 struct ColorSlider_Previews: PreviewProvider {
   static var previews: some View {
     VStack {
-      ColorSlider()
-      ColorSlider()
-      ColorSlider()
+			ColorSlider(color: .red, value: .constant(0.6))
+			ColorSlider(color: .green, value: .constant(0.2))
+			ColorSlider(color: .blue, value: .constant(0.8))
     }
     .previewLayout(.sizeThatFits)
   }

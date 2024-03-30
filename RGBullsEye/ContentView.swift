@@ -126,7 +126,8 @@ struct ColorSliderView: View {
         .foregroundColor(Color(textColor))
       
       // TODO: - Replace with fancy ColorUISlider
-      Slider(value: $value)
+//      Slider(value: $value)
+			ColorSlider(color: textColor, value: $value)
       
       Text("255")
         .foregroundColor(Color(textColor))
